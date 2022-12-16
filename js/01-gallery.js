@@ -2,25 +2,25 @@ import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
 const galleryEl = document.querySelector('.gallery');
-let modalEl = '';
-makeMarkup(galleryItems, galleryEl);
+let modalEl;
+generateMarkup(galleryItems, galleryEl);
 galleryEl.addEventListener('click', onImageClick);
 
-function makeMarkup(galleryItems, element) {
+function generateMarkup(galleryItems, element) {
   const markup = galleryItems
-    .map(galleryItem => {
-      return `
-        <div class="gallery__item">
-        <a class="gallery__link href="${galleryItem.original}">
+    .map(
+      ({ original, preview, description }) =>
+        `<div class="gallery__item">
+        <a class="gallery__link href="${original}">
         <img
             class="gallery__image"
-            src="${galleryItem.preview}"
-            data-source="${galleryItem.original}"
-            alt="${galleryItem.description}"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
         />
         </a>
-        </div>`;
-    })
+        </div>`
+    )
     .join('');
 
   element.insertAdjacentHTML('beforeend', markup);
@@ -34,10 +34,10 @@ function onImageClick(event) {
   modalEl = basicLightbox.create(
     `<img src="${event.target.dataset.source}" width="800" height="600">`,
     {
-      onShow: modalEl => {
+      onShow: () => {
         window.addEventListener('keydown', onEscapePress);
       },
-      onClose: modalEl => {
+      onClose: () => {
         window.removeEventListener('keydown', onEscapePress);
       },
     }
@@ -47,7 +47,6 @@ function onImageClick(event) {
 }
 
 function onEscapePress(event) {
-  console.log(event.code);
   if (event.code !== 'Escape') {
     return;
   }
